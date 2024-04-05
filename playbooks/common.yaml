@@ -1,3 +1,4 @@
+
 ---
 - name: update web, nfs and db servers
   hosts: webservers, nfs, db
@@ -9,7 +10,6 @@
       yum:
         name: wireshark
         state: latest
-   
 
 - name: update LB server
   hosts: lb
@@ -25,3 +25,18 @@
       apt:
         name: wireshark
         state: latest
+
+    - name: Create a directory
+      file:
+        path: /example/directory
+        state: directory
+        mode: '0755'
+
+    - name: Create a file inside the directory
+      file:
+        path: /example/directory/example_file.txt
+        state: touch
+
+    - name: Change timezone to UTC
+      timezone:
+        name: UTC
