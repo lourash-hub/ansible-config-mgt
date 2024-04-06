@@ -1,36 +1,27 @@
 ---
-- name: install apache
+- name: Install Apache (httpd service)
   become: true
   ansible.builtin.yum:
     name: "httpd"
     state: present
 
-- name: install git
-  become: true
-  ansible.builtin.yum:
-    name: "git"
-    state: present
-
-- name: clone a repo
+- name: Clone Tooling website from GitHub
   become: true
   ansible.builtin.git:
     repo: https://github.com/lourash-hub/tooling.git
     dest: /var/www/html
     force: yes
 
-- name: copy html content to one level up
+- name: Deploy website code to /var/www/html on UAT Web servers
   become: true
-  command: cp -r /var/www/html/html/ /var/www/
+  ansible.builtin.copy:
+    src: /var/www/html
+    dest: /var/www/html
+  delegate_to: "{{ item }}"
+  loop: "{{ groups['uat_web_servers'] }}"
 
-- name: Start service httpd, if not started
+- name: Start httpd service
   become: true
   ansible.builtin.service:
     name: httpd
     state: started
-
-- name: recursively remove /var/www/html/html/ directory
-  become: true
-  ansible.builtin.file:
-    path: /var/www/html/html
-    state: absent
-
