@@ -1,3 +1,8 @@
 ---
 - hosts: all
-- import_playbook: ../static-assignments/common-del.yaml
+- import_playbook: ../static-assignments/common.yaml
+
+- hosts: uat-webservers
+- import_playbook: ../static-assignments/uat-webservers.yaml
+
+
